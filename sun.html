@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Solar System Simulation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; cursor: pointer; }
+        th:hover { background-color: #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Solar System Simulation</h1>
+    <p>Click anywhere to display the solar system data table:</p>
+    <div id="tableContainer"></div>
+
+    <script>
+        document.addEventListener('click', function() {
+            const solarSystemData = [
+                { name: "Sun", mass: "1.989 × 10³⁰ kg", orbitRadius: "0 km", color: "Yellow", diameter: "1,392,700 km" },
+                { name: "Mercury", mass: "3.301 × 10²³ kg", orbitRadius: "57.9 million km", color: "Gray", diameter: "4,880 km" },
+                { name: "Venus", mass: "4.867 × 10²⁴ kg", orbitRadius: "108.2 million km", color: "Yellowish-white", diameter: "12,104 km" },
+                { name: "Earth", mass: "5.972 × 10²⁴ kg", orbitRadius: "149.6 million km", color: "Blue", diameter: "12,742 km" },
+                { name: "Mars", mass: "6.417 × 10²³ kg", orbitRadius: "227.9 million km", color: "Red", diameter: "6,779 km" },
+                { name: "Jupiter", mass: "1.899 × 10²⁷ kg", orbitRadius: "778.5 million km", color: "Striped brown", diameter: "139,820 km" },
+                { name: "Saturn", mass: "5.685 × 10²⁶ kg", orbitRadius: "1.434 billion km", color: "Pale gold", diameter: "116,460 km" },
+                { name: "Uranus", mass: "8.682 × 10²⁵ kg", orbitRadius: "2.871 billion km", color: "Pale blue", diameter: "50,724 km" },
+                { name: "Neptune", mass: "1.024 × 10²⁶ kg", orbitRadius: "4.495 billion km", color: "Deep blue", diameter: "49,244 km" },
+                { name: "Pluto", mass: "1.309 × 10²² kg", orbitRadius: "5.906 billion km", color: "Light brown", diameter: "2,377 km" }
+            ];
+
+            const table = document.createElement('table');
+            
+            // Create header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            ["Celestial Body", "Mass", "Orbit Radius", "Color", "Diameter"].forEach(col => {
+                const th = document.createElement('th');
+                th.textContent = col;
+                th.onclick = () => sortTable(col);
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Create body
+            const tbody = document.createElement('tbody');
+            solarSystemData.forEach(body => {
+                const row = document.createElement('tr');
+                ["name", "mass", "orbitRadius", "color", "diameter"].forEach(prop => {
+                    const td = document.createElement('td');
+                    td.textContent = body[prop];
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+            
+            document.getElementById('tableContainer').innerHTML = '';
+            document.getElementById('tableContainer').appendChild(table);
+            
+            function sortTable(column) {
+                const colIndex = ["Celestial Body", "Mass", "Orbit Radius", "Color", "Diameter"].indexOf(column);
+                const propNames = ["name", "mass", "orbitRadius", "color", "diameter"];
+                
+                solarSystemData.sort((a, b) => {
+                    const valA = a[propNames[colIndex]];
+                    const valB = b[propNames[colIndex]];
+                    
+                    // For numerical values (extract numbers from strings)
+                    if (column === "Mass" || column === "Diameter" || column === "Orbit Radius") {
+                        const numA = parseFloat(valA.replace(/[^\d.-]/g, ''));
+                        const numB = parseFloat(valB.replace(/[^\d.-]/g, ''));
+                        return numA - numB;
+                    }
+                    return valA.localeCompare(valB);
+                });
+                
+                // Rebuild table with sorted data
+                document.getElementById('tableContainer').innerHTML = '';
+                document.getElementById('tableContainer').appendChild(table);
+            }
+        });
+    </script>
+</body>
+</html>
